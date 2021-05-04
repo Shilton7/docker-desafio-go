@@ -1,9 +1,12 @@
-FROM golang:latest
+FROM golang:alpine AS builder
 
 WORKDIR /usr/src/app
 
 COPY . .
 
-ENTRYPOINT [ "go", "run" ]
+RUN go build main.go
 
-CMD [ "main.go" ]
+FROM scratch
+COPY --from=builder /usr/src/app .
+
+ENTRYPOINT [ "./main" ]
